@@ -63,14 +63,6 @@ class User :
                 if password2 == password: 
 
                     self.password = password
-                    
-                    # self.password = User.encryptPassword(password, f)
-                    
-                    # print(self.password)
-
-                    # self.password = User.decryptPassword(self.password, f)
-
-                    # print(self.password)
 
                     break
                 else:
@@ -79,10 +71,10 @@ class User :
             else:
                 print("password should be 8 characters at least ")
                 continue
-        
-    def record (self):
-        User.mail_key[self.email] = self.key
-        # print (User.mail_key)
+    
+    @classmethod
+    def record (cls, mail, key):
+        cls.mail_key[mail] = key
 
     
     def register (self):
@@ -104,10 +96,8 @@ class User :
         with open("save.txt", "a") as file:
             file.write("/n")
         
-        self.record()
+        self.record(self.email, self.key)
     
-        
-
     
     def login(self):
         # print (self.key)
@@ -118,8 +108,6 @@ class User :
         key = self.key
         # print (key)
         f = Fernet(key)
-        # f = self.f
-
         plain_text = f.decrypt(encrypted_key)
         plain_text = plain_text.decode()
 
