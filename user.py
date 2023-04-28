@@ -76,16 +76,43 @@ class User :
     def record (cls, mail, key):
         cls.mail_key[mail] = key
 
+
+    def start(self):
+        login = input("do you want to login or register? ")
+        if login == "login":
+            self.login()
+        elif login == "register":
+            self.register()
+        else:
+            print("please enter a valid option")
+            self.start()
     
     def register (self):
-        self.getfirst()
-        self.getlast()
-        self.getemail()
-        self.getnumber()
+        while True :
+            counter = 0
+            self.getfirst()
+            self.getlast()
+            self.getnumber()
+            self.getemail()
+            self.getpassword()
+            with open('save.txt', 'r') as file:
+                for line in file.readlines():
+                    if line.split(":")[2] == self.email :
+                        print("Email already used, try to login ")
+                        counter = counter + 1
+                        # continue
+                        break
+                    elif line.split(":")[3] == self.number :
+                        print("Phone number already used")
+                        counter = counter + 1
+                        break
+                if counter == 0:
+                    break
+			
         key = Fernet.generate_key()
         self.key = key
         f = Fernet(key)
-        self.getpassword()
+        
         encrypted_password = self.encryptPassword(self.password)
         with open("save.txt", "a") as file:
                 # file.write((str(self.first) + ":" + str(self.last) + ":" + str(self.email) + ":" + str(self.number) + ":" + encrypted_password.encode() +"\n"))
@@ -94,25 +121,65 @@ class User :
                 file.write(encrypted_password.decode('utf-8'))
                 # file.write(encrypted_password)
         with open("save.txt", "a") as file:
-            file.write("/n")
-        
+            file.write("\n")
+            
+        print (f"congratulaition {self.first}, you already registered!!")
+
         self.record(self.email, self.key)
-    
-    
+
+        self.loginAfterRegistration()
+
+        
+    def loginAfterRegistration(self):
+        login = input( "do you want to login ?" )
+        if login == "yes":
+            self.login()
+        elif login == "no":
+            self.start()
+        else:
+            print("please enter a valid option")
+            self.loginAfterRegistration()
+
     def login(self):
-        # print (self.key)
-        with open('save.txt', 'r') as file:
-            info = file.read()
-            encrypted_key = info.split(":")[4].encode('utf-8')
+        counter = 0 
+        print (self.key)
+        while True:
+            email = input("Email: ")
+            # print (self.key)
+            with open('save.txt', 'r') as file:
+                for line in file.readlines():
+                    # print (line.split(":")[3])
+                    if line.split(":")[2] == email:
+                        counter = counter + 1
+                        name = line.split(":")[1]
+                        print (f"welcome {name}")
+                        print("please enter your password")
+                        password = input("password: ")
+                        encrypted_key = line.split(":")[4].encode('utf-8')
+                        break
+                if counter == 0:
+                    print("please enter a valid email")
+                    continue
+                else:
+                    break
+                
+        
             # print (encrypted_key)
         key = self.key
-        # print (key)
         f = Fernet(key)
         plain_text = f.decrypt(encrypted_key)
         plain_text = plain_text.decode()
 
-
+        if password == plain_text:
+            self.afterLogin()
+        else: 
+            print("wrong password")
+            self.login()
     
+    
+    def afterLogin(self):
+        print ("you are loged in now")
+             
     @staticmethod
     def verifyName (name):
         if re.match(r'^[a-zA-Z]+$', name):
@@ -173,13 +240,16 @@ class User :
     #             file.write(str(cls.first) + ":" + str(cls.last) + ":" + str(cls.email) + ":" + str(cls.number) + ":" + str(cls.encryptPassword(cls.password, cls.f)) +"\n")
 
 
+# User.start()
 
+user1 = User()
+user1.start()
 
-# user1 = User()
-# user1.register()
+# user2 = User()
+# user2.register()
 # user1.login()
 # user1.save()
 
 # print (user1.password)
 
-print (User.mail_key)
+# print (User.mail_key)
