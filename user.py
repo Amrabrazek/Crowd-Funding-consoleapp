@@ -2,6 +2,7 @@ import re
 import getpass
 from cryptography.fernet import Fernet
 class User :
+    mail_key = {}
     def __init__(self):
         self.first = None
         self.last = None
@@ -9,7 +10,6 @@ class User :
         self.number = None
         self.password = None
         self.key = None
-        self.f = None
 
     def getfirst (self):
         while True:
@@ -21,8 +21,6 @@ class User :
                 print("Please enter a valid first name")
                 continue
     
-
-
     def getlast (self):
         while True:
             name = input("Last Name: ").strip()
@@ -81,48 +79,50 @@ class User :
             else:
                 print("password should be 8 characters at least ")
                 continue
+        
+    def record (self):
+        User.mail_key[self.email] = self.key
+        # print (User.mail_key)
 
     
     def register (self):
-        # self.getfirst()
-        # # print (self.first)
-        # self.getlast()
-        # self.getemail()
-        # self.getnumber()
+        self.getfirst()
+        self.getlast()
+        self.getemail()
+        self.getnumber()
         key = Fernet.generate_key()
-        f = Fernet(key)
         self.key = key
-        self.f = f
-        print (self.f)
-        print (self.key)
+        f = Fernet(key)
         self.getpassword()
-        with open("save.txt", "ab") as file:
-                # file.write(str(self.first) + ":" + str(self.last) + ":" + str(self.email) + ":" + str(self.number) + ":" + str(self.encryptPassword(self.password, f)) +"\n")
-                file.write(self.encryptPassword(self.password))
+        encrypted_password = self.encryptPassword(self.password)
+        with open("save.txt", "a") as file:
+                # file.write((str(self.first) + ":" + str(self.last) + ":" + str(self.email) + ":" + str(self.number) + ":" + encrypted_password.encode() +"\n"))
+                file.write(str(self.first) + ":" + str(self.last) + ":" + str(self.email) + ":" + str(self.number) + ":")
+        with open("save.txt", "a") as file:
+                file.write(encrypted_password.decode('utf-8'))
+                # file.write(encrypted_password)
+        with open("save.txt", "a") as file:
+            file.write("/n")
         
+        self.record()
+    
+        
+
     
     def login(self):
-        print (self.key)
-        with open('save.txt', 'rb') as file:
-            encrypted_key = file.read()
-            print (encrypted_key)
+        # print (self.key)
+        with open('save.txt', 'r') as file:
+            info = file.read()
+            encrypted_key = info.split(":")[4].encode('utf-8')
+            # print (encrypted_key)
         key = self.key
-        print (key)
+        # print (key)
         f = Fernet(key)
         # f = self.f
 
         plain_text = f.decrypt(encrypted_key)
         plain_text = plain_text.decode()
 
-        print(f"decrepted value: {plain_text}")
-
-        # email = input("Email: ")
-        # password = input("Password: ")
-
-        # with open("password.txt", "rb") as file:
-        #     for line in file:
-        #         line=line.split(":")
-        #         if line[3] == email and line[5] == password:
 
     
     @staticmethod
@@ -157,9 +157,9 @@ class User :
     
     def encryptPassword (self, password):
         f = Fernet(self.key)
-        f = self.f
         password=str(password).encode()
         encrypted_password = f.encrypt(password)
+        # print(f"type of encrypted: {type(encrypted_password)}")
         return encrypted_password
     
     @staticmethod
@@ -187,10 +187,11 @@ class User :
 
 
 
-user1 = User()
-user1.register()
-print(user1.key)
-user1.login()
+# user1 = User()
+# user1.register()
+# user1.login()
 # user1.save()
 
 # print (user1.password)
+
+print (User.mail_key)
