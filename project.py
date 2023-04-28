@@ -1,5 +1,5 @@
 import re
-from tabulate import tabulate
+from tabulate import tabulate  #use "pip install tabulate"
 from datetime import datetime
 # from user.py import User 
 
@@ -80,8 +80,9 @@ class project :
         with open('projects.txt', 'a') as file:
             file.write(self.projectName + ":" + self.authour + ":" + self.description + ":" + self.Target + ":" + self.startDate + ":" + self.endDate + "\n")
     
-    @classmethod
-    def view (cls):
+    @staticmethod
+    def view ():
+        print ("Viewing projects")
         with open('projects.txt', 'r') as file:
             projectsnames = []
             authors = []
@@ -100,9 +101,33 @@ class project :
             table = [projectsnames,authors,decriptions,maoney,sdates,edates]
             print(tabulate(table))
 
+    @staticmethod
+    def delete_project():
+        print ("Deleting project")
+        projectsnames = []
+        
+        with open('projects.txt', 'r') as file:
+            lines = file.readlines()
+            for line in lines:
+                projectsnames.append(line.split(':')[0])
+        while True:
+            print (f"current projects are: {projectsnames}")
+            projectToBeDeleted = input ("which project do you want to delete: ")
+            
+            if projectToBeDeleted in projectsnames:
+                break
+            else:
+                print("Please enter a valid project name")
+                continue
+        
+        with open('projects.txt', 'w') as file:
+            for line in lines:
+                # print(line.split(":"))
+                # print (line.split(":")[2])
+                # print (projectToBeDeleted)
+                if line.split(":")[0] != projectToBeDeleted:
+                    file.write(line)
 
-    
-                
 
     @staticmethod
     def is_valid_date(date_string):
@@ -133,8 +158,9 @@ class project :
 # if __name__ == "__main__":
 # project_1 = project()
 # project_1.create_project()
-
 project.view()
+
+project.delete_project()
 
 # table = [["Sun",696000,1989100000],["Earth",6371,5973.6],["Moon",1737,73.5],["Mars",3390,641.85]]
 # print(tabulate(table))
