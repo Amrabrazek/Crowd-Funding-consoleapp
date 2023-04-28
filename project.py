@@ -25,7 +25,7 @@ class project :
             else:
                 print("Please enter a valid Project name, it can't start with a number")
                 continue
-    
+
     
     def getauthor (self, email):
 
@@ -41,6 +41,8 @@ class project :
     def getdescription (self):
         self.description = input("Please enter a description: ")
 
+    def is_between_dates(date_to_check, start_date, end_date):
+        return start_date <= date_to_check <= end_date
 
     def getProjectProp(self):
 
@@ -79,7 +81,8 @@ class project :
         self.getProjectProp()
         with open('projects.txt', 'a') as file:
             file.write(self.projectName + ":" + self.authour + ":" + self.description + ":" + self.Target + ":" + self.startDate + ":" + self.endDate + "\n")
-    
+
+
     @staticmethod
     def view ():
         print ("Viewing projects")
@@ -128,6 +131,31 @@ class project :
                 if line.split(":")[0] != projectToBeDeleted:
                     file.write(line)
 
+    @staticmethod
+    def search_project() :
+
+        print("Searching for a project...")
+
+        projectFound = []
+
+        while True:
+            dateToSearchWith = input("Please enter a  Date: ")
+            if project.is_valid_date(dateToSearchWith):
+                break
+            else:
+                print("Please enter a valid Date, it should be in this format (YYYY-MM-DD)")
+                continue
+        
+        with open('projects.txt', 'r') as file:
+            lines = file.readlines()
+            for line in lines:
+                startdate = line.split(":")[4]
+                enddate = line.split(":")[5]
+                if project.is_between_dates(dateToSearchWith, startdate, enddate):
+                    projectFound.append(line.split(":")[0])
+                    break
+
+        print (projectFound) 
 
     @staticmethod
     def is_valid_date(date_string):
@@ -137,7 +165,6 @@ class project :
         except ValueError:
             return False
     
-
     @staticmethod
     def verifyNumber (number):
         if re.match(r'^[0-9]+$', number):
@@ -145,7 +172,6 @@ class project :
         else:
             return False
 
-    
     @staticmethod
     def verifyName (name):
         if re.match(r'^[a-zA-Z][a-zA-Z0-9_]*$', name):
@@ -154,13 +180,13 @@ class project :
             return False
 
 
-
 # if __name__ == "__main__":
 # project_1 = project()
 # project_1.create_project()
-project.view()
+# project.view()
+# project.delete_project()
 
-project.delete_project()
+project.search_project()
 
 # table = [["Sun",696000,1989100000],["Earth",6371,5973.6],["Moon",1737,73.5],["Mars",3390,641.85]]
 # print(tabulate(table))
