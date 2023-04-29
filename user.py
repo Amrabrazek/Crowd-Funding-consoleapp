@@ -76,7 +76,7 @@ class User :
     def record (cls, mail, key):
         cls.mail_key[mail] = key
 
-
+    
     def start(self):
         login = input("do you want to login or register? ")
         if login == "login":
@@ -126,6 +126,8 @@ class User :
         print (f"congratulaition {self.first}, you already registered!!")
 
         self.record(self.email, self.key)
+        with open("password.txt", "a") as filex:
+            filex.write(self.email + ":" + self.key.decode('utf-8') + "\n")
 
         self.loginAfterRegistration()
 
@@ -140,18 +142,20 @@ class User :
             print("please enter a valid option")
             self.loginAfterRegistration()
 
+
     def login(self):
         counter = 0 
         print (self.key)
         while True:
             email = input("Email: ")
             # print (self.key)
+            #get the encrypted password
             with open('save.txt', 'r') as file:
                 for line in file.readlines():
                     # print (line.split(":")[3])
                     if line.split(":")[2] == email:
                         counter = counter + 1
-                        name = line.split(":")[1]
+                        name = line.split(":")[0]
                         print (f"welcome {name}")
                         print("please enter your password")
                         password = input("password: ")
@@ -162,10 +166,17 @@ class User :
                     continue
                 else:
                     break
-                
+    
         
-            # print (encrypted_key)
-        key = self.key
+        # print (encrypted_key)
+
+        # get the key from the password file
+        with open('password.txt', 'r') as file:
+            for line in file.readlines():
+                    if line.split(":")[0] == email:
+                        key = line.split(":")[1].encode('utf-8')
+
+        # key = self.key
         f = Fernet(key)
         plain_text = f.decrypt(encrypted_key)
         plain_text = plain_text.decode()

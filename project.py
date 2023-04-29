@@ -44,6 +44,7 @@ class project :
     def is_between_dates(date_to_check, start_date, end_date):
         return start_date <= date_to_check <= end_date
 
+
     def getProjectProp(self):
 
         while True:
@@ -131,6 +132,7 @@ class project :
                 if line.split(":")[0] != projectToBeDeleted:
                     file.write(line)
 
+
     @staticmethod
     def search_project() :
 
@@ -139,7 +141,7 @@ class project :
         projectFound = []
 
         while True:
-            dateToSearchWith = input("Please enter a  Date: ")
+            dateToSearchWith = input("Please enter a Date: ")
             if project.is_valid_date(dateToSearchWith):
                 break
             else:
@@ -155,7 +157,7 @@ class project :
                     projectFound.append(line.split(":")[0])
                     break
 
-        print (projectFound) 
+        print (projectFound)
 
     @staticmethod
     def is_valid_date(date_string):
@@ -185,7 +187,6 @@ class project :
 # project_1.create_project()
 # project.view()
 # project.delete_project()
-
 project.search_project()
 
 # table = [["Sun",696000,1989100000],["Earth",6371,5973.6],["Moon",1737,73.5],["Mars",3390,641.85]]
