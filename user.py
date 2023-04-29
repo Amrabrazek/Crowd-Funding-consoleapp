@@ -78,14 +78,29 @@ class User :
 
     
     def start(self):
-        login = input("do you want to login or register? ")
-        if login == "login":
+        options = [1,2,3]
+        while True:
+            print ("Do you want to:-")
+            print ("1-register")
+            print ("2-Login")
+            print ("3-exit")
+            option = int(input (": "))
+
+            if option in options:
+                break
+            else:
+                print("please enter a valid option")
+                continue
+
+        if option == 2:
             self.login()
-        elif login == "register":
+            return True
+        elif option == 1:
             self.register()
-        else:
-            print("please enter a valid option")
-            self.start()
+            return True
+        elif option == 3:
+            return False
+
     
     def register (self):
         while True :
@@ -164,10 +179,8 @@ class User :
                     print("please enter a valid email")
                     continue
                 else:
+                    self.email = email
                     break
-    
-        
-        # print (encrypted_key)
 
         # get the key from the password file
         counter2 = 0
@@ -199,6 +212,7 @@ class User :
     
     def afterLogin(self):
         print ("you are loged in now")
+        
              
     @staticmethod
     def verifyName (name):
@@ -262,8 +276,8 @@ class User :
 
 # User.start()
 
-user1 = User()
-user1.start()
+# user1 = User()
+# user1.start()
 
 # user2 = User()
 # user2.register()
