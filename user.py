@@ -144,8 +144,7 @@ class User :
 
 
     def login(self):
-        counter = 0 
-        print (self.key)
+        counter = 0
         while True:
             email = input("Email: ")
             # print (self.key)
@@ -171,10 +170,20 @@ class User :
         # print (encrypted_key)
 
         # get the key from the password file
-        with open('password.txt', 'r') as file:
-            for line in file.readlines():
-                    if line.split(":")[0] == email:
-                        key = line.split(":")[1].encode('utf-8')
+        counter2 = 0
+        while True:
+            with open('password.txt', 'r') as file:
+                for line in file.readlines():
+                        if line.split(":")[0] == email:
+                            key = line.split(":")[1].encode('utf-8')
+                            counter2 = counter2 + 1
+                            break
+                
+                if counter2 == 0:
+                    print("please enter a valid password")
+                    self.login()
+                else:
+                    break
 
         # key = self.key
         f = Fernet(key)
