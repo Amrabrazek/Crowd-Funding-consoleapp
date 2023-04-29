@@ -1,6 +1,7 @@
 import re
 from tabulate import tabulate  #use "pip install tabulate"
 from datetime import datetime
+from datetime import date
 # from user.py import User 
 
 # user1 = User()
@@ -77,7 +78,7 @@ class Project :
             if endDate > startDate :
                 break
             else:
-                print ("en date should be after start date")
+                print ("end date should be after start date")
 
 
     def create_project (self, loggedInEmail):
@@ -167,13 +168,29 @@ class Project :
                 print("Please enter a valid Date, it should be in this format (YYYY-MM-DD)")
                 continue
         
+        yearx = int(dateToSearchWith.split("-")[0])
+        monthx = int(dateToSearchWith.split("-")[1])
+        dayx = int(dateToSearchWith.split("-")[2])
+
+        dateToSearchWith = date (yearx, monthx, dayx)
+
         with open('projects.txt', 'r') as file:
             lines = file.readlines()
             for line in lines:
                 startdate = line.split(":")[4]
+                years = int(startdate.split("-")[0])
+                months = int(startdate.split("-")[1])
+                days = int(startdate.split("-")[2])
+                startdate = date (years, months, days)
                 print (startdate)
+
                 enddate = line.split(":")[5]
+                yeare = int(enddate.split("-")[0])
+                monthe = int(enddate.split("-")[1])
+                daye = int(enddate.split("-")[2])
+                enddate = date (yeare, monthe, daye)
                 print (enddate)
+
                 if Project.is_between_dates(dateToSearchWith, startdate, enddate):
                     print(line)
                     projectFound.append(line.split(":")[0])
