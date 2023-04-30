@@ -107,7 +107,7 @@ class Project :
             authors = ["Author Name"]
             decriptions = ["Description"]
             target = ["Target"]
-            donated = ["Remaining"]
+            donated = ["Donated"]
             sdates = ["Start Date"]
             edates = ["End Date"]
             for line in file.readlines():
