@@ -80,7 +80,7 @@ class User :
     def start(self):
         options = ["1","2","3"]
         while True:
-
+            print("welcome to charity.com ")
             print ("Do you want to:- ")
             print ("1-register")
             print ("2-Login")

@@ -204,7 +204,7 @@ class Project :
                                 # elif option == 3
 
                                 file.write(line)
-                                break #break the field to be edited
+                                #break the field to be edited
                     break #break the question
 
                 elif projectToBeedited == "skip":
@@ -267,10 +267,6 @@ class Project :
                     print("Please enter a valid option")
                     continue
             
-            
-
-
-
 
     @staticmethod
     def delete_project(loggedInEmail):
