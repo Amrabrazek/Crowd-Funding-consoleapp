@@ -76,16 +76,32 @@ class User :
     def record (cls, mail, key):
         cls.mail_key[mail] = key
 
-
+    
     def start(self):
-        login = input("do you want to login or register? ")
-        if login == "login":
+        options = ["1","2","3"]
+        while True:
+            print("welcome to charity.com ")
+            print ("Do you want to:- ")
+            print ("1-register")
+            print ("2-Login")
+            print ("3-exit")
+            option = input (": ")
+
+            if option in options:
+                break
+            else:
+                print("please enter a valid option")
+                continue
+
+        if option == "2":
             self.login()
-        elif login == "register":
+            return True
+        elif option == "1":
             self.register()
-        else:
-            print("please enter a valid option")
-            self.start()
+            return True
+        elif option == "3":
+            return False
+
     
     def register (self):
         while True :
@@ -126,6 +142,8 @@ class User :
         print (f"congratulaition {self.first}, you already registered!!")
 
         self.record(self.email, self.key)
+        with open("password.txt", "a") as filex:
+            filex.write(self.email + ":" + self.key.decode('utf-8') + "\n")
 
         self.loginAfterRegistration()
 
@@ -140,32 +158,47 @@ class User :
             print("please enter a valid option")
             self.loginAfterRegistration()
 
+
     def login(self):
-        counter = 0 
-        print (self.key)
+        counter = 0
         while True:
             email = input("Email: ")
             # print (self.key)
+            #get the encrypted password
             with open('save.txt', 'r') as file:
                 for line in file.readlines():
                     # print (line.split(":")[3])
                     if line.split(":")[2] == email:
                         counter = counter + 1
-                        name = line.split(":")[1]
+                        name = line.split(":")[0]
                         print (f"welcome {name}")
-                        print("please enter your password")
-                        password = input("password: ")
+                        password = getpass.getpass(prompt='Enter your password: ')
                         encrypted_key = line.split(":")[4].encode('utf-8')
                         break
                 if counter == 0:
                     print("please enter a valid email")
                     continue
                 else:
+                    self.email = email
                     break
+
+        # get the key from the password file
+        counter2 = 0
+        while True:
+            with open('password.txt', 'r') as file:
+                for line in file.readlines():
+                        if line.split(":")[0] == email:
+                            key = line.split(":")[1].encode('utf-8')
+                            counter2 = counter2 + 1
+                            break
                 
-        
-            # print (encrypted_key)
-        key = self.key
+                if counter2 == 0:
+                    print("please enter a valid password")
+                    self.login()
+                else:
+                    break
+
+        # key = self.key
         f = Fernet(key)
         plain_text = f.decrypt(encrypted_key)
         plain_text = plain_text.decode()
@@ -179,6 +212,7 @@ class User :
     
     def afterLogin(self):
         print ("you are loged in now")
+        
              
     @staticmethod
     def verifyName (name):
@@ -232,18 +266,12 @@ class User :
             if obj.name == name2:
                 print(obj.name, obj.queue)
                 return obj
-    
-    # @classmethod
-    # def save(cls):
-    #     print (cls.first)
-    #     with open("save.txt", "a") as file:
-    #             file.write(str(cls.first) + ":" + str(cls.last) + ":" + str(cls.email) + ":" + str(cls.number) + ":" + str(cls.encryptPassword(cls.password, cls.f)) +"\n")
-
+            
 
 # User.start()
 
-user1 = User()
-user1.start()
+# user1 = User()
+# user1.start()
 
 # user2 = User()
 # user2.register()
