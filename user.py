@@ -78,13 +78,14 @@ class User :
 
     
     def start(self):
-        options = [1,2,3]
+        options = ["1","2","3"]
         while True:
-            print ("Do you want to:-")
+
+            print ("Do you want to:- ")
             print ("1-register")
             print ("2-Login")
             print ("3-exit")
-            option = int(input (": "))
+            option = input (": ")
 
             if option in options:
                 break
@@ -92,13 +93,13 @@ class User :
                 print("please enter a valid option")
                 continue
 
-        if option == 2:
+        if option == "2":
             self.login()
             return True
-        elif option == 1:
+        elif option == "1":
             self.register()
             return True
-        elif option == 3:
+        elif option == "3":
             return False
 
     
@@ -171,8 +172,7 @@ class User :
                         counter = counter + 1
                         name = line.split(":")[0]
                         print (f"welcome {name}")
-                        print("please enter your password")
-                        password = input("password: ")
+                        password = getpass.getpass(prompt='Enter your password: ')
                         encrypted_key = line.split(":")[4].encode('utf-8')
                         break
                 if counter == 0:
@@ -266,13 +266,7 @@ class User :
             if obj.name == name2:
                 print(obj.name, obj.queue)
                 return obj
-    
-    # @classmethod
-    # def save(cls):
-    #     print (cls.first)
-    #     with open("save.txt", "a") as file:
-    #             file.write(str(cls.first) + ":" + str(cls.last) + ":" + str(cls.email) + ":" + str(cls.number) + ":" + str(cls.encryptPassword(cls.password, cls.f)) +"\n")
-
+            
 
 # User.start()
 

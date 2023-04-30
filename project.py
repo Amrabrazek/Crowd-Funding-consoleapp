@@ -107,7 +107,7 @@ class Project :
             authors = ["Author Name"]
             decriptions = ["Description"]
             target = ["Target"]
-            remaining = ["Remaining"]
+            donated = ["Remaining"]
             sdates = ["Start Date"]
             edates = ["End Date"]
             for line in file.readlines():
@@ -115,11 +115,11 @@ class Project :
                 authors.append(line.split(':')[1])
                 decriptions.append(line.split(':')[2])
                 target.append(line.split(':')[3])
-                remaining.append(line.split(':')[7])
+                donated.append(line.split(':')[7])
                 sdates.append(line.split(':')[4])
                 edates.append(line.split(':')[5])
 
-            table = [projectsnames,authors,decriptions,target,remaining,sdates,edates]
+            table = [projectsnames,authors,decriptions,target,donated,sdates,edates]
             print(tabulate(table))
 
     @staticmethod
@@ -170,24 +170,42 @@ class Project :
                                         print("please enter a valid option")
                                         continue
                                 
+                                
+
                                 #getting the index of the first character
                                 num = option - 1
                                 value = line.split(":")[num]
                                 indexofvalue = line.index(value)
-                                print (indexofvalue)
+                                # print (indexofvalue)
 
                                 #getting the index of the last character
                                 num2 = num + 1
                                 value2 = line.split(":")[num2]
                                 indexofvalue2 = line.index(value2)
                                 indexofvalue2 = indexofvalue2 - 1
-                                print (indexofvalue2)
+                                # print (indexofvalue2)
 
                                 newvalue = input ("what is the new value: ")
-
                                 line = line[:int(indexofvalue)] + newvalue + line[int(indexofvalue2):]
 
+
+                                # editing the remaining if the target changed 
+                                # if option == 4:
+                                #     differance = newvalue - value
+                                # 
+                                #     value = line.split(":")[7]
+                                #     indexofvalue = line.index(value)
+                                #     # print (indexofvalue)
+
+                                #     newvalueforremaining = value + differance
+
+                                #     line = line[:int(indexofvalue)] + str(newvalueforremaining)
+                                
+                                # elif option == 3
+
                                 file.write(line)
+                                break #break the field to be edited
+                    break #break the question
 
                 elif projectToBeedited == "skip":
                     break
@@ -196,15 +214,63 @@ class Project :
                     continue
             
             
-                        # if option == 1 :
-                        #     value = line.split(":")[0]
-                        #     indexofvalue = line.index(value)   
-                        #     print (indexofvalue)
+    
+    @staticmethod
+    def donate():
+        print("Donating to a project")
 
-                        # elif option == 2 :
-                        #     value = line.split(":")[1]
+        todayDate = datetime.today()
+        projects = []
+        with open('projects.txt', 'r') as file:
+            lines = file.readlines()
 
-        
+
+            for line in lines:
+                startDate = line.split(':')[4]
+                startDate = datetime.strptime(startDate, "%Y-%m-%d")
+
+                if todayDate >= startDate:
+                    projects.append(line.split(':')[0])
+
+        if len(projects) == 0:
+            print ("No projects available to donate now, try again later")
+        else:
+            while True:
+                print (f"projects available to donate to now: {projects}")
+                print ("which project do you want to donate to :-")
+                print ("type skip to skip")
+
+                projectToBeDonated = input (": ")
+
+                if projectToBeDonated in projects:
+                    with open('projects.txt', 'r') as file:
+                       lines = file.readlines()
+
+                    with open('projects.txt', 'w') as file:
+                        for line in lines:
+                            # print(line.split(":"))
+                            # print (line.split(":")[2])
+                            # print (projectToBeDeleted)
+                            if line.split(":")[0] != projectToBeDonated:
+                                file.write(line)
+                            else :
+                                howMuch = int(input("how much do you want to donate: "))
+                                value = line.split(":")[7]
+                                indexofvalue = line.index(value)
+                                newvalueforremaining = int(value.strip()) + howMuch
+                                line = line[:int(indexofvalue)] + str(newvalueforremaining) + "\n"
+                                file.write(line)
+                    break
+                elif projectToBeDonated == "skip":
+                    break
+                else:
+                    print("Please enter a valid option")
+                    continue
+            
+            
+
+
+
 
     @staticmethod
     def delete_project(loggedInEmail):
@@ -262,26 +328,29 @@ class Project :
                 print("Please enter a valid Date, it should be in this format (YYYY-MM-DD)")
                 continue
         
-        yearx = int(dateToSearchWith.split("-")[0])
-        monthx = int(dateToSearchWith.split("-")[1])
-        dayx = int(dateToSearchWith.split("-")[2])
-        dateToSearchWith = date (yearx, monthx, dayx)
+        # yearx = int(dateToSearchWith.split("-")[0])
+        # monthx = int(dateToSearchWith.split("-")[1])
+        # dayx = int(dateToSearchWith.split("-")[2])
+        # dateToSearchWith = date (yearx, monthx, dayx)
+        dateToSearchWith = datetime.strptime(dateToSearchWith, "%Y-%m-%d")
 
         with open('projects.txt', 'r') as file:
             lines = file.readlines()
             for line in lines:
                 startdate = line.split(":")[4]
-                years = int(startdate.split("-")[0])
-                months = int(startdate.split("-")[1])
-                days = int(startdate.split("-")[2])
-                startdate = date (years, months, days)
+                # years = int(startdate.split("-")[0])
+                # months = int(startdate.split("-")[1])
+                # days = int(startdate.split("-")[2])
+                # startdate = date (years, months, days)
+                startdate = datetime.strptime(startdate, "%Y-%m-%d")
                 # print (startdate)
 
                 enddate = line.split(":")[5]
-                yeare = int(enddate.split("-")[0])
-                monthe = int(enddate.split("-")[1])
-                daye = int(enddate.split("-")[2])
-                enddate = date (yeare, monthe, daye)
+                # yeare = int(enddate.split("-")[0])
+                # monthe = int(enddate.split("-")[1])
+                # daye = int(enddate.split("-")[2])
+                # enddate = date (yeare, monthe, daye)
+                enddate = datetime.strptime(enddate, "%Y-%m-%d")
                 # print (enddate)
 
                 if Project.is_between_dates(dateToSearchWith, startdate, enddate):
@@ -323,3 +392,12 @@ class Project :
 
 # table = [["Sun",696000,1989100000],["Earth",6371,5973.6],["Moon",1737,73.5],["Mars",3390,641.85]]
 # print(tabulate(table))
+
+
+# now = datetime.now()
+# print(now)
+# date_string = now.strftime("%Y-%m-%d")
+# print(date_string)
+# date_object = datetime.strptime(date_string, "%Y-%m-%d")
+
+# print(date_object)
