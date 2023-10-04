@@ -11,7 +11,7 @@ The aim of the project:
                - Confirm password
                - Mobile phone [validated against Egyptian phone numbers]
                - Login
-- The user is able to login after activation using his email and password
+- The user is able to login after activation using his email and password.
 - Projects:
 -     The user can create a project fund raise campaign which contains:
                - Title
